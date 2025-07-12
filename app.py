@@ -10,19 +10,19 @@ from pydub import AudioSegment
 import pydub.utils
 
 # === Set ffmpeg & ffprobe paths ===
-FFMPEG_PATH = r"C:\Users\Thaar\ffmpeg-7.1.1-essentials_build\bin\ffmpeg.exe"
-FFPROBE_PATH = r"C:\Users\Thaar\ffmpeg-7.1.1-essentials_build\bin\ffprobe.exe"
+from pydub.utils import which
+
+FFMPEG_PATH = which("ffmpeg")
+FFPROBE_PATH = which("ffprobe")
 
 print("📌 Checking ffmpeg and ffprobe paths...")
-if not os.path.isfile(FFMPEG_PATH):
-    raise FileNotFoundError(f"❌ ffmpeg not found at: {FFMPEG_PATH}")
-if not os.path.isfile(FFPROBE_PATH):
-    raise FileNotFoundError(f"❌ ffprobe not found at: {FFPROBE_PATH}")
+if not FFMPEG_PATH:
+    raise FileNotFoundError("❌ ffmpeg not found in system path.")
+if not FFPROBE_PATH:
+    raise FileNotFoundError("❌ ffprobe not found in system path.")
 
 AudioSegment.converter = FFMPEG_PATH
-AudioSegment.ffprobe = FFPROBE_PATH
-pydub.utils.get_encoder_name = lambda: FFMPEG_PATH
-pydub.utils.get_prober_name = lambda: FFPROBE_PATH
+AudioSegment.ffprobe = FFMPEG_PATH  # Pydub uses the same binary for both
 print("✅ ffmpeg and ffprobe paths set successfully")
 
 # === Init Flask ===
